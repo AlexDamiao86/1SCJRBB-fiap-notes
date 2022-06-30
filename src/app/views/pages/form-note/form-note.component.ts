@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { Note } from 'src/app/services/@types/note';
 import { NoteService } from 'src/app/services/note.service';
 
 @Component({
@@ -12,6 +14,7 @@ export class FormNoteComponent implements OnInit {
   logoImage = '/assets/logo.png';
 
   checkoutForm: FormGroup;
+  subscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -20,6 +23,11 @@ export class FormNoteComponent implements OnInit {
     this.checkoutForm = this.formBuilder.group({
       textNote: ['', [Validators.required, Validators.minLength(5)]],
     });
+    this.subscription = this.noteService.editNoteProvider.subscribe(
+      (note: Note) => {
+        this.textNote?.setValue(note.text);
+      }
+    );
   }
 
   ngOnInit(): void {}
@@ -42,4 +50,5 @@ export class FormNoteComponent implements OnInit {
   get textNote() {
     return this.checkoutForm.get('textNote');
   }
+
 }

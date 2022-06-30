@@ -43,4 +43,12 @@ export class ListNotesComponent implements OnInit {
       () => this.notes = this.notes.filter(note => note.id !== noteId)
     );
   }
+
+  editNote(note: Note) {
+    this.noteService.notifyNoteEditRequested(note);
+    // remove a nota da lista ao clicar em editar
+    // para utilizar a mesma operacao de incluir ao salvar
+    this.removeNote(note.id);
+  }
+
 }

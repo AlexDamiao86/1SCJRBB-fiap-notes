@@ -36,3 +36,10 @@ article .material-icons:hover {
   left: 5px;
   width: fit-content;
 }
+
+#edit {
+  position: absolute;
+  bottom: 5px;
+  right: 40px;
+  width: fit-content;
+}
