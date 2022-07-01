@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Note } from 'src/app/services/@types/note';
@@ -18,7 +18,8 @@ export class FormNoteComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private noteService: NoteService
+    private noteService: NoteService,
+    private renderer: Renderer2
   ) {
     this.checkoutForm = this.formBuilder.group({
       textNote: ['', [Validators.required, Validators.minLength(5)]],
@@ -26,6 +27,7 @@ export class FormNoteComponent implements OnInit {
     this.subscription = this.noteService.editNoteProvider.subscribe(
       (note: Note) => {
         this.textNote?.setValue(note.text);
+        this.focusTextNote();
       }
     );
   }
@@ -49,6 +51,10 @@ export class FormNoteComponent implements OnInit {
 
   get textNote() {
     return this.checkoutForm.get('textNote');
+  }
+
+  focusTextNote() {
+    this.renderer.selectRootElement('#input-note').focus();
   }
 
 }

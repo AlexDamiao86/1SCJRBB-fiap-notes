@@ -1,13 +1,13 @@
 <aside>
   <img [src]="logoImage" />
   <h1>{{title}}</h1>
-  <form id="form-notes" 
+  <form id="form-notes"
       [formGroup]="checkoutForm" (submit)="sendNote()">
     <div class="input-group">
       <label>Nota:</label>
       <textarea
         type="text"
-        id="input-cpf"
+        id="input-note"
         formControlName="textNote"
         required
         placeholder="Digite a nota"
