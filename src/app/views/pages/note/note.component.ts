@@ -31,7 +31,7 @@ export class NoteComponent implements OnInit {
   }
 
   edit() {
-    alert(`Favor alterar o texto no campo "Nota" ao lado`);
+    // alert(`Favor alterar o texto no campo "Nota" ao lado`);
     this.notifyEdit.emit();
   }
 

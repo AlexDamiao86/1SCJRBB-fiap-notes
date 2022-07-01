@@ -18,10 +18,13 @@ export class ListNotesComponent implements OnInit {
   constructor(private noteService: NoteService) {
     this.subscription = this.noteService.newNoteProvider.subscribe({
       next: (note: Note) => {
-        // this.getApiNotes();
+        //this.getApiNotes();
         this.notes.push(note);
       },
       error: () => {}
+    });
+    this.subscription = this.noteService.editedNoteProvider.subscribe({
+      next: () => this.getApiNotes()
     });
   }
 
@@ -46,9 +49,6 @@ export class ListNotesComponent implements OnInit {
 
   editNote(note: Note) {
     this.noteService.notifyNoteEditRequested(note);
-    // remove a nota da lista ao clicar em editar
-    // para utilizar a mesma operacao de incluir ao salvar
-    this.removeNote(note.id);
   }
 
 }

@@ -15,6 +15,8 @@ export class FormNoteComponent implements OnInit {
 
   checkoutForm: FormGroup;
   subscription: Subscription;
+  note = <Note>{};
+  isEditing = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -26,6 +28,8 @@ export class FormNoteComponent implements OnInit {
     });
     this.subscription = this.noteService.editNoteProvider.subscribe(
       (note: Note) => {
+        this.note = note;
+        this.isEditing = true;
         this.textNote?.setValue(note.text);
         this.focusTextNote();
       }
@@ -37,15 +41,28 @@ export class FormNoteComponent implements OnInit {
   sendNote() {
     // console.log(this.checkoutForm.get('textNote')?.errors);
     if (this.checkoutForm.valid) {
-      this.noteService.postNotes(this.checkoutForm.value.textNote).subscribe({
-        //next é chamado quando as coisas dão certo
-        next: (note) => {
-          this.checkoutForm.reset();
-          this.noteService.notifyNewNoteAdded(note);
-        },
-        //error é chamado no caso de excessões
-        error: (error) => alert("Algo errado na inserção! " + error)
-      });
+      if (!this.isEditing) {
+        this.noteService.postNotes(this.checkoutForm.value.textNote).subscribe({
+          //next é chamado quando as coisas dão certo
+          next: (note) => {
+            this.checkoutForm.reset();
+            this.noteService.notifyNewNoteAdded(note);
+          },
+          //error é chamado no caso de excessões
+          error: (error) => alert("Algo errado na inserção! " + error)
+        });
+      } else {
+        this.note.text = this.checkoutForm.value.textNote;
+        this.noteService.editNote(this.note).subscribe({
+          next: () => {
+            this.checkoutForm.reset();
+            this.isEditing = false;
+            this.noteService.notifyNoteEdited(this.note);
+            this.note = <Note>{};
+          },
+          error: (error) => alert("Algo errado na atualização! " + error)
+        });
+      }
     }
   }
 
